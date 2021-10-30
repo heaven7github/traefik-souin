@@ -21,6 +21,7 @@ entryPoints:
 api:
   debug: true
   dashboard: true
+  insecure: true
 
 providers:
   providersThrottleDuration: 2s
@@ -38,5 +39,11 @@ accessLog: {}
 log:
   level: DEBUG
 
-
+pilot:
+  token: "[token]"
+experimental:
+  plugins:
+    souin:
+      moduleName: "github.com/darkweak/souin"
+      version: "v1.5.10"
 #metrics: {}
