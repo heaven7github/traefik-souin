@@ -1,0 +1,26 @@
+http:
+  routers:
+#    http-catchall:
+#      rule: "HostRegexp(`{host:.+}`)"
+#      priority: 1000
+#      entryPoints:
+#        - web
+#      middlewares:
+#        - redirect-to-https
+#      service: api@internal
+    api:
+      entryPoints:
+        - web
+        - websecure
+      rule: Host(`{{env "TRAEFIK_HOSTNAME"}}`)
+      service: api@internal
+#      middlewares:
+#        - auth
+  middlewares:
+    auth:
+      basicAuth:
+        users:
+          - "admin:$apr1$aqhtg1ec$Ky6Dn7.hv46gMF0KvxoGu1"
+    redirect-to-https:
+      redirectScheme:
+        scheme: https

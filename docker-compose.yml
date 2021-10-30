@@ -1,0 +1,36 @@
+version: '3.8'
+
+# docker network create traefik # from .env
+networks:
+  traefik:
+    external: true
+    name: ${TRAEFIK_NETWORK}
+
+services:
+  reverse-proxy:
+    image: traefik
+    environment:
+      - TRAEFIK_HOSTNAME=traefik.localhost
+      - BASE_HOSTNAME=localhost
+    volumes:
+      - "./config:/etc/traefik"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    env_file:
+      - .env
+    networks:
+      - traefik
+    ports:
+      - 80:80
+      - 443:443
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+    labels:
+      # Dashboard
+      - traefik.enable=true
+      - traefik.http.routers.traefik-dashboard.rule=Host(`traefik.localhost`)
+      - traefik.http.routers.traefik-dashboard.entrypoints=web
+      - traefik.http.routers.traefik-dashboard.tls=false
+      - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080

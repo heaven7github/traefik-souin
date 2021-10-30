@@ -1,0 +1,42 @@
+entryPoints:
+  web:
+    address: :80
+    proxyProtocol:
+      insecure: true
+    forwardedHeaders:
+      insecure: true
+    transport:
+      respondingTimeouts:
+        idleTimeout: 3000
+  websecure:
+    address: :443
+    proxyProtocol:
+      insecure: true
+    forwardedHeaders:
+      insecure: true
+    transport:
+      respondingTimeouts:
+        idleTimeout: 3000
+
+api:
+  debug: true
+  dashboard: true
+
+providers:
+  providersThrottleDuration: 2s
+  file:
+    filename: /etc/traefik/file-provider.yml
+    watch: true
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    swarmMode: false
+    exposedByDefault: false
+    network: traefik
+    swarmModeRefreshSeconds: 15s
+    defaultRule: "Host(`{{ .Name }}.{{env \"BASE_HOSTNAME\"}}`)"
+accessLog: {}
+log:
+  level: DEBUG
+
+
+#metrics: {}
